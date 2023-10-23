@@ -1,6 +1,7 @@
 # deficiency_tackler
+Last updated 23 Oct 2023
 
-The deficiency tackler is a tool that suggests what foods one can eat to overcome nutritional deficiencies for their age.
+The deficiency tackler is being designed as a web app that suggests what foods one can eat to overcome nutritional deficiencies for their age.
 
 The tool is being built to take in the nutritional deficiency and age of a person. Then, the tool displays foods that one could eat to overcome the given nutritional deficiency.
 
