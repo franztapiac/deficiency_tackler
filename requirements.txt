@@ -1,1 +1,3 @@
+gitPython
+numpy
 pandas

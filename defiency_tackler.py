@@ -1,4 +1,13 @@
+from git import Repo
+import os
 from pathlib import Path
+import sys
+current_file_str_path = os.path.abspath(__file__)
+repo_root_str_path = Repo(current_file_str_path, search_parent_directories=True).git.rev_parse("--show-toplevel")
+sys.path.append(repo_root_str_path)
+import csv
+import io
+import numpy as np
 import pandas as pd
 from time import time
 import re
@@ -53,9 +62,18 @@ def tackle_deficiency(def_nutrient: str, age: int, db_path: Path, test_method: s
     :param db_path: The path to the food content database.
     :type db_path: Path.
     """
-
-    whole_db = read_database(db_path)
-
+    tic = time()
+    whole_db = pd.read_csv(db_path)
+    nan_indices = whole_db[whole_db['source_id'].isna()].index
+    for i, nan_index in enumerate(nan_indices):
+        print(f'Working on index {i} of {len(nan_indices)}.')
+        row_text = whole_db.iloc[nan_index][0]
+        row_divided = next(csv.reader(io.StringIO(row_text), quotechar='"', delimiter=','))
+        converted_list = [float(x) if x.replace('.', '', 1).isdigit() else (np.nan if x == '' else x) for x in row_divided]  # convert list to right dtypes
+        df_parsed = pd.DataFrame(converted_list).T
+        whole_db.iloc[nan_index] = df_parsed.iloc[0]  # return df into original
+    toc = time() - tic
+    print(f'Duration for updating all database: {toc:.0f} seconds.')
     print('f')
 
     # From all hits
@@ -75,7 +93,8 @@ def tackle_deficiency(def_nutrient: str, age: int, db_path: Path, test_method: s
 
 
 if __name__ == '__main__':
-    database_path = Path(r"C:\Users\franz\Documents\work\projects\deficiency_tackler\data\foodb_2020_04_07_csv\foodb_2020_04_07_csv\Content_unknown_removed.csv")
+    repo_path = Path(repo_root_str_path)
+    database_path = repo_path / 'data/Content_unknown_removed.csv'
     deficient_nutrient = 'luteolin'
     age_in_years = 27
     test_mode = 're'
