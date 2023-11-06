@@ -6,7 +6,7 @@ This web app is being developing an exercise for the author to learn about nutri
 
 ### <u>Current development</u>
 The author is currently working on the following:
-1. Reading the database information. Some database elements are not properly being read by Python pandas.
+1. Reading the database information. Most 80% of the database elements are not properly being read by Python pandas.
 
 ### <u>Applications of this web app</u>
 This web app may have some applications, such as:
